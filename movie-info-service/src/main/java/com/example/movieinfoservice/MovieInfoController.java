@@ -13,10 +13,8 @@ import java.util.List;
 public class MovieInfoController {
 
     @RequestMapping("/{movieid}")
-    public List<MovieInfo> getMovie(@PathVariable(value = "movieid") String movieid)
+    public MovieInfo getMovie(@PathVariable(value = "movieid") String movieid)
     {
-        return Collections.singletonList(
-                new MovieInfo(movieid,"pk")
-        );
+        return new MovieInfo(movieid,"pk");
     }
 }
