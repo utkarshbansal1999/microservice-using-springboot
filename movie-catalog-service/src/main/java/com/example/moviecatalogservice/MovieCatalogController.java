@@ -29,13 +29,14 @@ public class MovieCatalogController {
 
         //RestTemplate restTemplate=new RestTemplate();
 
-        List<RatingData> ratings= Arrays.asList(
-          new RatingData("123",5),
-          new RatingData("456",4)
-        );
+//        List<RatingData> ratings= Arrays.asList(
+//          new RatingData("123",5),
+//          new RatingData("456",4)
+//        );
 
+        UserRating ratings=restTemplate.getForObject("http://localhost:8083/ratings/users/"+userid,UserRating.class);
 
-        return ratings.stream().map(rating ->
+        return ratings.getRatings().stream().map(rating ->
                 {
                     MovieInfo movieInfo = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieid(), MovieInfo.class);
                     //               OR
