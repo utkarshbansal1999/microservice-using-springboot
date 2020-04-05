@@ -20,8 +20,8 @@ public class MovieCatalogController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private WebClient.Builder webClientBuilder;
+//    @Autowired
+//    private WebClient.Builder webClientBuilder;
 
     @RequestMapping("/{userid}")
     public List<MovieCatalog> getCatalog(@PathVariable(value="userid") String userid)
@@ -37,16 +37,16 @@ public class MovieCatalogController {
 
         return ratings.stream().map(rating ->
                 {
-                    //  MovieInfo movieInfo = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieid(), MovieInfo.class);
+                    MovieInfo movieInfo = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieid(), MovieInfo.class);
                     //               OR
 
-                    MovieInfo movieInfo = webClientBuilder.build()
+                    /*  MovieInfo movieInfo = webClientBuilder.build()
                             .get()
-                            .uri("http://localhost:8082/movies/" + rating.getMovieid())
+                            .uri("http://localhost:8082/movies/" + rating.getMovieid())    // Reactive Web
                             .retrieve()
                             .bodyToMono(MovieInfo.class)
                             .block();
-
+                    */
                     return new MovieCatalog(rating.getMovieid(),movieInfo.getName(),rating.getRating());
                 }
         ).collect(Collectors.toList());
