@@ -2,6 +2,7 @@ package com.example.moviecatalogservice;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,11 @@ public class MovieCatalogController {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${movieUrl}")
+    private String movieUrl;
+
+    @Value("${ratingUrl}")
+    private String ratingUrl;
 //    @Autowired
 //    private WebClient.Builder webClientBuilder;
 
@@ -34,11 +40,12 @@ public class MovieCatalogController {
 //          new RatingData("456",4)
 //        );
 
-        UserRating ratings=restTemplate.getForObject("http://localhost:8083/ratings/users/"+userid,UserRating.class);
+        UserRating ratings=restTemplate.getForObject(ratingUrl+userid,UserRating.class);
 
+        assert ratings != null;
         return ratings.getRatings().stream().map(rating ->
                 {
-                    MovieInfo movieInfo = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieid(), MovieInfo.class);
+                    MovieInfo movieInfo = restTemplate.getForObject( movieUrl+ rating.getMovieid(), MovieInfo.class);
                     //               OR
 
                     /*  MovieInfo movieInfo = webClientBuilder.build()
@@ -46,8 +53,9 @@ public class MovieCatalogController {
                             .uri("http://localhost:8082/movies/" + rating.getMovieid())    // Reactive Web
                             .retrieve()
                             .bodyToMono(MovieInfo.class)
-                            .block();
+                            .block();  // to convert to synchronus
                     */
+                    assert movieInfo != null;
                     return new MovieCatalog(rating.getMovieid(),movieInfo.getName(),rating.getRating());
                 }
         ).collect(Collectors.toList());
