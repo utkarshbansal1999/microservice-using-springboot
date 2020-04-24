@@ -3,6 +3,7 @@ package com.example.moviecatalogservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,9 @@ public class MovieCatalogController {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private DiscoveryClient discoveryClient;    // eureka service discovery
 
     @Value("${movieUrl}")
     private String movieUrl;
